@@ -10,7 +10,8 @@
       "source": "policy_refund_v4.txt",
       "score": 0.812,
       "metadata": {
-        "source": "policy_refund_v4.txt"
+        "source": "policy_refund_v4.txt",
+        "chunk_index": 4
       }
     },
     {
@@ -18,7 +19,8 @@
       "source": "policy_refund_v4.txt",
       "score": 0.6902,
       "metadata": {
-        "source": "policy_refund_v4.txt"
+        "source": "policy_refund_v4.txt",
+        "chunk_index": 2
       }
     },
     {
@@ -26,7 +28,8 @@
       "source": "policy_refund_v4.txt",
       "score": 0.6407,
       "metadata": {
-        "source": "policy_refund_v4.txt"
+        "source": "policy_refund_v4.txt",
+        "chunk_index": 5
       }
     },
     {
@@ -34,6 +37,7 @@
       "source": "sla_p1_2026.txt",
       "score": 0.6274,
       "metadata": {
+        "chunk_index": 1,
         "source": "sla_p1_2026.txt"
       }
     },
@@ -42,11 +46,31 @@
       "source": "policy_refund_v4.txt",
       "score": 0.6263,
       "metadata": {
+        "chunk_index": 6,
         "source": "policy_refund_v4.txt"
+      }
+    },
+    {
+      "text": "=== Phần 2: SLA theo mức độ ưu tiên ===",
+      "source": "sla_p1_2026.txt",
+      "score": 0.625,
+      "metadata": {
+        "chunk_index": 6,
+        "source": "sla_p1_2026.txt"
+      }
+    },
+    {
+      "text": "Q: Hộp thư đến đầy, phải làm gì?\nA: Xóa email cũ hoặc yêu cầu tăng dung lượng qua ticket IT-ACCESS. Dung lượng tiêu chuẩn là 50GB.",
+      "source": "it_helpdesk_faq.txt",
+      "score": 0.6221,
+      "metadata": {
+        "source": "it_helpdesk_faq.txt",
+        "chunk_index": 16
       }
     }
   ],
   "retrieved_sources": [
+    "it_helpdesk_faq.txt",
     "policy_refund_v4.txt",
     "sla_p1_2026.txt"
   ],
@@ -61,6 +85,7 @@
       }
     ],
     "source": [
+      "it_helpdesk_faq.txt",
       "policy_refund_v4.txt",
       "sla_p1_2026.txt"
     ],
@@ -68,19 +93,22 @@
     "explanation": "Analyzed via rule-based policy check. TODO: upgrade to LLM-based analysis."
   },
   "mcp_tools_used": [],
-  "final_answer": "Không, khách hàng không thể yêu cầu hoàn tiền cho sản phẩm lỗi trong đơn hàng Flash Sale. Theo chính sách, đơn hàng Flash Sale không được hoàn tiền, ngay cả khi sản phẩm bị lỗi [1].",
+  "mcp_tool_called": [],
+  "mcp_result": [],
+  "final_answer": "Không, khách hàng không thể yêu cầu hoàn tiền cho sản phẩm lỗi trong chương trình Flash Sale. Theo chính sách, đơn hàng đã áp dụng mã giảm giá đặc biệt theo chương trình khuyến mãi Flash Sale không được hoàn tiền [1].",
   "sources": [
+    "it_helpdesk_faq.txt",
     "policy_refund_v4.txt",
     "sla_p1_2026.txt"
   ],
-  "confidence": 0.63,
+  "confidence": 1.0,
   "history": [
     "[supervisor] received task: Khách hàng Flash Sale yêu cầu hoàn tiền vì sản phẩm lỗi — được không?",
     "[supervisor] route=policy_tool_worker reason=policy/access keyword detected: 'hoàn tiền'",
-    "[retrieval_worker] retrieved 5 chunks from ['policy_refund_v4.txt', 'sla_p1_2026.txt']",
+    "[retrieval_worker] retrieved 7 chunks from ['it_helpdesk_faq.txt', 'policy_refund_v4.txt', 'sla_p1_2026.txt']",
     "[policy_tool_worker] policy_applies=False, exceptions=1",
-    "[synthesis_worker] answer generated, confidence=0.63, sources=['policy_refund_v4.txt', 'sla_p1_2026.txt']",
-    "[graph] completed in 10627ms"
+    "[synthesis_worker] answer generated, confidence=1.0, sources=['it_helpdesk_faq.txt', 'policy_refund_v4.txt', 'sla_p1_2026.txt']",
+    "[graph] completed in 6820ms"
   ],
   "workers_called": [
     "retrieval_worker",
@@ -88,19 +116,20 @@
     "synthesis_worker"
   ],
   "supervisor_route": "policy_tool_worker",
-  "latency_ms": 10627,
-  "run_id": "run_20260414_113857",
-  "retrieval_top_k": 5,
+  "latency_ms": 6820,
+  "run_id": "run_20260414_152833",
+  "retrieval_top_k": 7,
   "worker_io_logs": [
     {
       "worker": "retrieval_worker",
       "input": {
         "task": "Khách hàng Flash Sale yêu cầu hoàn tiền vì sản phẩm lỗi — được không?",
-        "top_k": 5
+        "top_k": 7
       },
       "output": {
-        "chunks_count": 5,
+        "chunks_count": 7,
         "sources": [
+          "it_helpdesk_faq.txt",
           "policy_refund_v4.txt",
           "sla_p1_2026.txt"
         ]
@@ -111,7 +140,7 @@
       "worker": "policy_tool_worker",
       "input": {
         "task": "Khách hàng Flash Sale yêu cầu hoàn tiền vì sản phẩm lỗi — được không?",
-        "chunks_count": 5,
+        "chunks_count": 7,
         "needs_tool": true
       },
       "output": {
@@ -125,16 +154,17 @@
       "worker": "synthesis_worker",
       "input": {
         "task": "Khách hàng Flash Sale yêu cầu hoàn tiền vì sản phẩm lỗi — được không?",
-        "chunks_count": 5,
+        "chunks_count": 7,
         "has_policy": true
       },
       "output": {
-        "answer_length": 181,
+        "answer_length": 217,
         "sources": [
+          "it_helpdesk_faq.txt",
           "policy_refund_v4.txt",
           "sla_p1_2026.txt"
         ],
-        "confidence": 0.63
+        "confidence": 1.0
       },
       "error": null
     }

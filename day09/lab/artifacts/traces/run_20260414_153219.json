@@ -1,0 +1,140 @@
+{
+  "task": "Nhân viên được làm remote tối đa mấy ngày mỗi tuần?",
+  "route_reason": "SLA/incident/HR keyword detected: 'remote'",
+  "risk_high": false,
+  "needs_tool": false,
+  "hitl_triggered": false,
+  "retrieved_chunks": [
+    {
+      "text": "4.1 Điều kiện remote:\n- Nhân viên sau probation period có thể làm remote tối đa 2 ngày/tuần.\n- Team Lead phải phê duyệt lịch remote qua HR Portal.\n- Ngày onsite bắt buộc: Thứ 3 và Thứ 5 theo lịch team.",
+      "source": "hr_leave_policy.txt",
+      "score": 0.7119,
+      "metadata": {
+        "source": "hr_leave_policy.txt",
+        "chunk_index": 13
+      }
+    },
+    {
+      "text": "Q: VPN có giới hạn số thiết bị không?\nA: Mỗi tài khoản được kết nối VPN trên tối đa 2 thiết bị cùng lúc.",
+      "source": "it_helpdesk_faq.txt",
+      "score": 0.6737,
+      "metadata": {
+        "source": "it_helpdesk_faq.txt",
+        "chunk_index": 8
+      }
+    },
+    {
+      "text": "Q: Tôi cần cài phần mềm mới, phải làm gì?\nA: Gửi yêu cầu qua Jira project IT-SOFTWARE. Line Manager phải phê duyệt trước khi IT cài đặt.",
+      "source": "it_helpdesk_faq.txt",
+      "score": 0.6228,
+      "metadata": {
+        "chunk_index": 10,
+        "source": "it_helpdesk_faq.txt"
+      }
+    },
+    {
+      "text": "Q: Tôi không nhận được email từ bên ngoài?\nA: Kiểm tra thư mục Spam trước. Nếu vẫn không có, tạo ticket P2 kèm địa chỉ email gửi và thời gian gửi.",
+      "source": "it_helpdesk_faq.txt",
+      "score": 0.6065,
+      "metadata": {
+        "source": "it_helpdesk_faq.txt",
+        "chunk_index": 17
+      }
+    },
+    {
+      "text": "Q: Tôi quên mật khẩu, phải làm gì?\nA: Truy cập https://sso.company.internal/reset hoặc liên hệ Helpdesk qua ext. 9000. Mật khẩu mới sẽ được gửi qua email công ty trong vòng 5 phút.",
+      "source": "it_helpdesk_faq.txt",
+      "score": 0.6038,
+      "metadata": {
+        "source": "it_helpdesk_faq.txt",
+        "chunk_index": 2
+      }
+    },
+    {
+      "text": "Ticket P4:\n- Phản hồi ban đầu: 3 ngày làm việc.\n- Xử lý và khắc phục: Theo sprint cycle (thông thường 2-4 tuần).",
+      "source": "sla_p1_2026.txt",
+      "score": 0.601,
+      "metadata": {
+        "chunk_index": 10,
+        "source": "sla_p1_2026.txt"
+      }
+    },
+    {
+      "text": "Q: Mật khẩu cần thay đổi định kỳ không?\nA: Có. Mật khẩu phải được thay đổi mỗi 90 ngày. Hệ thống sẽ nhắc nhở 7 ngày trước khi hết hạn.",
+      "source": "it_helpdesk_faq.txt",
+      "score": 0.5926,
+      "metadata": {
+        "chunk_index": 4,
+        "source": "it_helpdesk_faq.txt"
+      }
+    }
+  ],
+  "retrieved_sources": [
+    "sla_p1_2026.txt",
+    "it_helpdesk_faq.txt",
+    "hr_leave_policy.txt"
+  ],
+  "policy_result": {},
+  "mcp_tools_used": [],
+  "mcp_tool_called": [],
+  "mcp_result": [],
+  "final_answer": "Nhân viên được làm remote tối đa 2 ngày mỗi tuần sau khi hoàn thành probation period. Lịch remote cần được Team Lead phê duyệt qua HR Portal. Ngày onsite bắt buộc là Thứ 3 và Thứ 5 theo lịch team [1].",
+  "sources": [
+    "sla_p1_2026.txt",
+    "it_helpdesk_faq.txt",
+    "hr_leave_policy.txt"
+  ],
+  "confidence": 1.0,
+  "history": [
+    "[supervisor] received task: Nhân viên được làm remote tối đa mấy ngày mỗi tuần?",
+    "[supervisor] route=retrieval_worker reason=SLA/incident/HR keyword detected: 'remote'",
+    "[retrieval_worker] retrieved 7 chunks from ['sla_p1_2026.txt', 'it_helpdesk_faq.txt', 'hr_leave_policy.txt']",
+    "[synthesis_worker] answer generated, confidence=1.0, sources=['sla_p1_2026.txt', 'it_helpdesk_faq.txt', 'hr_leave_policy.txt']",
+    "[graph] completed in 7028ms"
+  ],
+  "workers_called": [
+    "retrieval_worker",
+    "synthesis_worker"
+  ],
+  "supervisor_route": "retrieval_worker",
+  "latency_ms": 7028,
+  "run_id": "run_20260414_153219",
+  "retrieval_top_k": 7,
+  "worker_io_logs": [
+    {
+      "worker": "retrieval_worker",
+      "input": {
+        "task": "Nhân viên được làm remote tối đa mấy ngày mỗi tuần?",
+        "top_k": 7
+      },
+      "output": {
+        "chunks_count": 7,
+        "sources": [
+          "sla_p1_2026.txt",
+          "it_helpdesk_faq.txt",
+          "hr_leave_policy.txt"
+        ]
+      },
+      "error": null
+    },
+    {
+      "worker": "synthesis_worker",
+      "input": {
+        "task": "Nhân viên được làm remote tối đa mấy ngày mỗi tuần?",
+        "chunks_count": 7,
+        "has_policy": false
+      },
+      "output": {
+        "answer_length": 200,
+        "sources": [
+          "sla_p1_2026.txt",
+          "it_helpdesk_faq.txt",
+          "hr_leave_policy.txt"
+        ],
+        "confidence": 1.0
+      },
+      "error": null
+    }
+  ],
+  "question_id": "q05"
+}

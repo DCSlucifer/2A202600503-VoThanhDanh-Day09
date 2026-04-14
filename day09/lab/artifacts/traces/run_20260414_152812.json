@@ -10,7 +10,8 @@
       "source": "sla_p1_2026.txt",
       "score": 0.6495,
       "metadata": {
-        "source": "sla_p1_2026.txt"
+        "source": "sla_p1_2026.txt",
+        "chunk_index": 0
       }
     },
     {
@@ -18,7 +19,8 @@
       "source": "sla_p1_2026.txt",
       "score": 0.6118,
       "metadata": {
-        "source": "sla_p1_2026.txt"
+        "source": "sla_p1_2026.txt",
+        "chunk_index": 9
       }
     },
     {
@@ -26,7 +28,8 @@
       "source": "sla_p1_2026.txt",
       "score": 0.6021,
       "metadata": {
-        "source": "sla_p1_2026.txt"
+        "source": "sla_p1_2026.txt",
+        "chunk_index": 8
       }
     },
     {
@@ -34,7 +37,8 @@
       "source": "it_helpdesk_faq.txt",
       "score": 0.5963,
       "metadata": {
-        "source": "it_helpdesk_faq.txt"
+        "source": "it_helpdesk_faq.txt",
+        "chunk_index": 14
       }
     },
     {
@@ -42,6 +46,7 @@
       "source": "it_helpdesk_faq.txt",
       "score": 0.5652,
       "metadata": {
+        "chunk_index": 16,
         "source": "it_helpdesk_faq.txt"
       }
     },
@@ -50,6 +55,7 @@
       "source": "sla_p1_2026.txt",
       "score": 0.5642,
       "metadata": {
+        "chunk_index": 10,
         "source": "sla_p1_2026.txt"
       }
     },
@@ -58,36 +64,39 @@
       "source": "sla_p1_2026.txt",
       "score": 0.5549,
       "metadata": {
+        "chunk_index": 7,
         "source": "sla_p1_2026.txt"
       }
     }
   ],
   "retrieved_sources": [
-    "sla_p1_2026.txt",
-    "it_helpdesk_faq.txt"
+    "it_helpdesk_faq.txt",
+    "sla_p1_2026.txt"
   ],
   "policy_result": {},
   "mcp_tools_used": [],
+  "mcp_tool_called": [],
+  "mcp_result": [],
   "final_answer": "SLA xử lý ticket P1 là như sau:\n\n- Phản hồi ban đầu: 15 phút kể từ khi ticket được tạo.\n- Xử lý và khắc phục: 4 giờ.\n- Escalation: Tự động escalate lên Senior Engineer nếu không có phản hồi trong 10 phút.\n- Thông báo stakeholder: Ngay khi nhận ticket, update mỗi 30 phút cho đến khi resolve [7].",
   "sources": [
-    "sla_p1_2026.txt",
-    "it_helpdesk_faq.txt"
+    "it_helpdesk_faq.txt",
+    "sla_p1_2026.txt"
   ],
   "confidence": 1.0,
   "history": [
     "[supervisor] received task: SLA xử lý ticket P1 là bao lâu?",
     "[supervisor] route=retrieval_worker reason=SLA/incident/HR keyword detected: 'p1'",
-    "[retrieval_worker] retrieved 7 chunks from ['sla_p1_2026.txt', 'it_helpdesk_faq.txt']",
-    "[synthesis_worker] answer generated, confidence=1.0, sources=['sla_p1_2026.txt', 'it_helpdesk_faq.txt']",
-    "[graph] completed in 21696ms"
+    "[retrieval_worker] retrieved 7 chunks from ['it_helpdesk_faq.txt', 'sla_p1_2026.txt']",
+    "[synthesis_worker] answer generated, confidence=1.0, sources=['it_helpdesk_faq.txt', 'sla_p1_2026.txt']",
+    "[graph] completed in 20608ms"
   ],
   "workers_called": [
     "retrieval_worker",
     "synthesis_worker"
   ],
   "supervisor_route": "retrieval_worker",
-  "latency_ms": 21696,
-  "run_id": "run_20260414_120127",
+  "latency_ms": 20608,
+  "run_id": "run_20260414_152812",
   "retrieval_top_k": 7,
   "worker_io_logs": [
     {
@@ -99,8 +108,8 @@
       "output": {
         "chunks_count": 7,
         "sources": [
-          "sla_p1_2026.txt",
-          "it_helpdesk_faq.txt"
+          "it_helpdesk_faq.txt",
+          "sla_p1_2026.txt"
         ]
       },
       "error": null
@@ -115,8 +124,8 @@
       "output": {
         "answer_length": 295,
         "sources": [
-          "sla_p1_2026.txt",
-          "it_helpdesk_faq.txt"
+          "it_helpdesk_faq.txt",
+          "sla_p1_2026.txt"
         ],
         "confidence": 1.0
       },

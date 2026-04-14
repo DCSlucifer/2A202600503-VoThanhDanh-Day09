@@ -1,0 +1,140 @@
+{
+  "task": "Ticket P1 được tạo lúc 22:47. Ai sẽ nhận thông báo đầu tiên và qua kênh nào? Escalation xảy ra lúc mấy giờ?",
+  "route_reason": "SLA/incident/HR keyword detected: 'p1'",
+  "risk_high": false,
+  "needs_tool": false,
+  "hitl_triggered": false,
+  "retrieved_chunks": [
+    {
+      "text": "Q: Hộp thư đến đầy, phải làm gì?\nA: Xóa email cũ hoặc yêu cầu tăng dung lượng qua ticket IT-ACCESS. Dung lượng tiêu chuẩn là 50GB.",
+      "source": "it_helpdesk_faq.txt",
+      "score": 0.7249,
+      "metadata": {
+        "source": "it_helpdesk_faq.txt",
+        "chunk_index": 16
+      }
+    },
+    {
+      "text": "Ticket P2:\n- Phản hồi ban đầu: 2 giờ.\n- Xử lý và khắc phục: 1 ngày làm việc.\n- Escalation: Tự động escalate sau 90 phút không có phản hồi.",
+      "source": "sla_p1_2026.txt",
+      "score": 0.7231,
+      "metadata": {
+        "source": "sla_p1_2026.txt",
+        "chunk_index": 8
+      }
+    },
+    {
+      "text": "Ticket P4:\n- Phản hồi ban đầu: 3 ngày làm việc.\n- Xử lý và khắc phục: Theo sprint cycle (thông thường 2-4 tuần).",
+      "source": "sla_p1_2026.txt",
+      "score": 0.6954,
+      "metadata": {
+        "source": "sla_p1_2026.txt",
+        "chunk_index": 10
+      }
+    },
+    {
+      "text": "Ticket P1:\n- Phản hồi ban đầu (first response): 15 phút kể từ khi ticket được tạo.\n- Xử lý và khắc phục (resolution): 4 giờ.\n- Escalation: Tự động escalate lên Senior Engineer nếu không có phản hồi trong 10 phút.\n- Thông báo stakeholder: Ngay khi nhận ticket, update mỗi 30 phút cho đến khi resolve.",
+      "source": "sla_p1_2026.txt",
+      "score": 0.6832,
+      "metadata": {
+        "source": "sla_p1_2026.txt",
+        "chunk_index": 7
+      }
+    },
+    {
+      "text": "Ticket P3:\n- Phản hồi ban đầu: 1 ngày làm việc.\n- Xử lý và khắc phục: 5 ngày làm việc.",
+      "source": "sla_p1_2026.txt",
+      "score": 0.679,
+      "metadata": {
+        "source": "sla_p1_2026.txt",
+        "chunk_index": 9
+      }
+    },
+    {
+      "text": "Q: Laptop bị hỏng phải báo cáo như thế nào?\nA: Tạo ticket P2 hoặc P3 tùy mức độ nghiêm trọng. Mang thiết bị đến IT Room (tầng 3) để kiểm tra.",
+      "source": "it_helpdesk_faq.txt",
+      "score": 0.6623,
+      "metadata": {
+        "source": "it_helpdesk_faq.txt",
+        "chunk_index": 14
+      }
+    },
+    {
+      "text": "1.3 Nghỉ thai sản:\n- Nghỉ sinh con: 6 tháng theo quy định Luật Lao động.\n- Nghỉ nuôi con nhỏ: 1 tiếng/ngày trong 12 tháng đầu sau sinh.",
+      "source": "hr_leave_policy.txt",
+      "score": 0.6577,
+      "metadata": {
+        "chunk_index": 4,
+        "source": "hr_leave_policy.txt"
+      }
+    }
+  ],
+  "retrieved_sources": [
+    "hr_leave_policy.txt",
+    "sla_p1_2026.txt",
+    "it_helpdesk_faq.txt"
+  ],
+  "policy_result": {},
+  "mcp_tools_used": [],
+  "mcp_tool_called": [],
+  "mcp_result": [],
+  "final_answer": "1. Ai sẽ nhận thông báo đầu tiên và qua kênh nào?\n   - Stakeholder sẽ nhận thông báo ngay khi ticket được tạo và cập nhật mỗi 30 phút cho đến khi resolve. [4]\n\n2. Escalation xảy ra lúc mấy giờ?\n   - Escalation sẽ xảy ra tự động sau 10 phút nếu không có phản hồi. Ticket được tạo lúc 22:47, do đó escalation sẽ xảy ra lúc 22:57. [4]",
+  "sources": [
+    "hr_leave_policy.txt",
+    "sla_p1_2026.txt",
+    "it_helpdesk_faq.txt"
+  ],
+  "confidence": 0.85,
+  "history": [
+    "[supervisor] received task: Ticket P1 được tạo lúc 22:47. Ai sẽ nhận thông báo đầu tiên và qua kênh nào? Esc",
+    "[supervisor] route=retrieval_worker reason=SLA/incident/HR keyword detected: 'p1'",
+    "[retrieval_worker] retrieved 7 chunks from ['hr_leave_policy.txt', 'sla_p1_2026.txt', 'it_helpdesk_faq.txt']",
+    "[synthesis_worker] answer generated, confidence=0.85, sources=['hr_leave_policy.txt', 'sla_p1_2026.txt', 'it_helpdesk_faq.txt']",
+    "[graph] completed in 6617ms"
+  ],
+  "workers_called": [
+    "retrieval_worker",
+    "synthesis_worker"
+  ],
+  "supervisor_route": "retrieval_worker",
+  "latency_ms": 6617,
+  "run_id": "run_20260414_153259",
+  "retrieval_top_k": 7,
+  "worker_io_logs": [
+    {
+      "worker": "retrieval_worker",
+      "input": {
+        "task": "Ticket P1 được tạo lúc 22:47. Ai sẽ nhận thông báo đầu tiên và qua kênh nào? Escalation xảy ra lúc mấy giờ?",
+        "top_k": 7
+      },
+      "output": {
+        "chunks_count": 7,
+        "sources": [
+          "hr_leave_policy.txt",
+          "sla_p1_2026.txt",
+          "it_helpdesk_faq.txt"
+        ]
+      },
+      "error": null
+    },
+    {
+      "worker": "synthesis_worker",
+      "input": {
+        "task": "Ticket P1 được tạo lúc 22:47. Ai sẽ nhận thông báo đầu tiên và qua kênh nào? Escalation xảy ra lúc mấy giờ?",
+        "chunks_count": 7,
+        "has_policy": false
+      },
+      "output": {
+        "answer_length": 331,
+        "sources": [
+          "hr_leave_policy.txt",
+          "sla_p1_2026.txt",
+          "it_helpdesk_faq.txt"
+        ],
+        "confidence": 0.85
+      },
+      "error": null
+    }
+  ],
+  "question_id": "q11"
+}

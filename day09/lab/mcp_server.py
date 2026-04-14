@@ -332,6 +332,12 @@ def dispatch_tool(tool_name: str, tool_input: dict) -> dict:
 # ─────────────────────────────────────────────
 
 if __name__ == "__main__":
+    import sys
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
+
     print("=" * 60)
     print("MCP Server — Tool Discovery & Test")
     print("=" * 60)

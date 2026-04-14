@@ -78,7 +78,68 @@ def _get_collection():
             metadata={"hnsw:space": "cosine"}
         )
         print(f"⚠️  Collection 'day09_docs' chưa có data. Chạy index script trong README trước.")
+    _bootstrap_collection_if_empty(collection)
     return collection
+
+
+def _chunk_document(text: str) -> list:
+    """
+    Chia tài liệu thành các đoạn theo block trống để retrieval ổn định hơn
+    khi local ChromaDB chưa được build sẵn.
+    """
+    chunks = []
+    for block in text.split("\n\n"):
+        normalized = block.strip()
+        if normalized:
+            chunks.append(normalized)
+    return chunks
+
+
+def _bootstrap_collection_if_empty(collection) -> None:
+    """
+    Tự build index tối thiểu từ data/docs khi collection trống.
+    Điều này giúp Sprint 4 chạy ổn định hơn trên máy chưa kịp setup Chroma.
+    """
+    try:
+        if collection.count() > 0:
+            return
+    except Exception:
+        return
+
+    docs_dir = "./data/docs"
+    if not os.path.isdir(docs_dir):
+        print("⚠️  Không tìm thấy data/docs để bootstrap collection.")
+        return
+
+    embed = _get_embedding_fn()
+    ids = []
+    documents = []
+    embeddings = []
+    metadatas = []
+
+    for fname in sorted(os.listdir(docs_dir)):
+        path = os.path.join(docs_dir, fname)
+        if not os.path.isfile(path) or not fname.endswith(".txt"):
+            continue
+        with open(path, "r", encoding="utf-8") as f:
+            content = f.read()
+        for idx, chunk in enumerate(_chunk_document(content)):
+            ids.append(f"{fname}::chunk::{idx}")
+            documents.append(chunk)
+            embeddings.append(embed(chunk))
+            metadatas.append({"source": fname, "chunk_index": idx})
+
+    if not ids:
+        print("⚠️  data/docs không có nội dung để bootstrap collection.")
+        return
+
+    collection.upsert(
+        ids=ids,
+        documents=documents,
+        embeddings=embeddings,
+        metadatas=metadatas,
+    )
+    print(f"✅ Bootstrapped collection 'day09_docs' với {len(ids)} chunks từ data/docs")
 
 
 def retrieve_dense(query: str, top_k: int = DEFAULT_TOP_K) -> list:
@@ -93,7 +154,6 @@ def retrieve_dense(query: str, top_k: int = DEFAULT_TOP_K) -> list:
     Returns:
         list of {"text": str, "source": str, "score": float, "metadata": dict}
     """
-    # TODO: Implement dense retrieval
     embed = _get_embedding_fn()
     query_embedding = embed(query)
 

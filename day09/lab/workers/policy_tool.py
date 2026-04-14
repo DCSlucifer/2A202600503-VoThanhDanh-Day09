@@ -163,6 +163,8 @@ def run(state: dict) -> dict:
     state.setdefault("workers_called", [])
     state.setdefault("history", [])
     state.setdefault("mcp_tools_used", [])
+    state.setdefault("mcp_tool_called", [])
+    state.setdefault("mcp_result", [])
 
     state["workers_called"].append(WORKER_NAME)
 
@@ -182,6 +184,8 @@ def run(state: dict) -> dict:
         if not chunks and needs_tool:
             mcp_result = _call_mcp_tool("search_kb", {"query": task, "top_k": 3})
             state["mcp_tools_used"].append(mcp_result)
+            state["mcp_tool_called"].append(mcp_result["tool"])
+            state["mcp_result"].append(mcp_result.get("output"))
             state["history"].append(f"[{WORKER_NAME}] called MCP search_kb")
 
             if mcp_result.get("output") and mcp_result["output"].get("chunks"):
@@ -196,6 +200,8 @@ def run(state: dict) -> dict:
         if needs_tool and any(kw in task.lower() for kw in ["ticket", "p1", "jira"]):
             mcp_result = _call_mcp_tool("get_ticket_info", {"ticket_id": "P1-LATEST"})
             state["mcp_tools_used"].append(mcp_result)
+            state["mcp_tool_called"].append(mcp_result["tool"])
+            state["mcp_result"].append(mcp_result.get("output"))
             state["history"].append(f"[{WORKER_NAME}] called MCP get_ticket_info")
 
         worker_io["output"] = {

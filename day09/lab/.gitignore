@@ -1,3 +1,6 @@
 .env
 CLAUDE.md
 superpowers/
+__pycache__/
+workers/__pycache__/
+chroma_db/

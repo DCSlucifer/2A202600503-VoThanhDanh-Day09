@@ -1,0 +1,60 @@
+{
+  "generated_at": "2026-04-14T15:33:43.696073",
+  "day08_single_agent": {
+    "total_questions": 10,
+    "faithfulness": 3.9,
+    "relevance": 4.1,
+    "context_recall": 5.0,
+    "completeness": 4.4,
+    "avg_latency_ms": "N/A",
+    "abstain_rate": "N/A",
+    "routing_visibility": "0/10",
+    "tool_usage_rate": "0/10 (0%)",
+    "faithfulness_count": "10/10",
+    "relevance_count": "10/10",
+    "context_recall_count": "10/10",
+    "completeness_count": "10/10"
+  },
+  "day09_multi_agent": {
+    "total_traces": 18,
+    "routing_distribution": {
+      "retrieval_worker": "9/18 (50%)",
+      "policy_tool_worker": "9/18 (50%)"
+    },
+    "avg_confidence": 0.956,
+    "avg_latency_ms": 8280,
+    "mcp_usage_rate": "3/18 (16%)",
+    "tool_calls_total": 3,
+    "hitl_rate": "1/18 (5%)",
+    "abstain_rate": "3/18 (16%)",
+    "top_sources": [
+      [
+        "it_helpdesk_faq.txt",
+        12
+      ],
+      [
+        "sla_p1_2026.txt",
+        12
+      ],
+      [
+        "policy_refund_v4.txt",
+        8
+      ],
+      [
+        "access_control_sop.txt",
+        8
+      ],
+      [
+        "hr_leave_policy.txt",
+        7
+      ]
+    ]
+  },
+  "analysis": {
+    "routing_visibility": "Day 08: 0/10 | Day 09: trace có supervisor_route + route_reason ở 18 traces",
+    "latency_delta": "Day 08: N/A | Day 09: 8280 ms",
+    "debuggability": "Multi-agent: supervisor và từng worker test độc lập được, trace chỉ ra route_reason và tool calls.",
+    "mcp_benefit": "Day 08: 0/10 (0%) | Day 09: 3/18 (16%) traces có MCP",
+    "abstain_observation": "Day 08: N/A | Day 09: 3/18 (16%)"
+  }
+}

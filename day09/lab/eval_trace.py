@@ -18,6 +18,7 @@ import json
 import os
 import sys
 import argparse
+import re
 from datetime import datetime
 from typing import Optional
 
@@ -185,7 +186,7 @@ def analyze_traces(traces_dir: str = "artifacts/traces") -> dict:
 
     traces = []
     for fname in trace_files:
-        with open(os.path.join(traces_dir, fname)) as f:
+        with open(os.path.join(traces_dir, fname), encoding="utf-8") as f:
             traces.append(json.load(f))
 
     # Compute metrics
@@ -195,6 +196,8 @@ def analyze_traces(traces_dir: str = "artifacts/traces") -> dict:
     mcp_calls = 0
     hitl_triggers = 0
     source_counts = {}
+    abstains = 0
+    tool_calls_total = 0
 
     for t in traces:
         route = t.get("supervisor_route", "unknown")
@@ -210,9 +213,14 @@ def analyze_traces(traces_dir: str = "artifacts/traces") -> dict:
 
         if t.get("mcp_tools_used"):
             mcp_calls += 1
+            tool_calls_total += len(t.get("mcp_tools_used", []))
 
         if t.get("hitl_triggered"):
             hitl_triggers += 1
+
+        final_answer = (t.get("final_answer") or "").lower()
+        if "không đủ thông tin" in final_answer or "khong du thong tin" in final_answer:
+            abstains += 1
 
         for src in t.get("retrieved_sources", []):
             source_counts[src] = source_counts.get(src, 0) + 1
@@ -224,7 +232,9 @@ def analyze_traces(traces_dir: str = "artifacts/traces") -> dict:
         "avg_confidence": round(sum(confidences) / len(confidences), 3) if confidences else 0,
         "avg_latency_ms": round(sum(latencies) / len(latencies)) if latencies else 0,
         "mcp_usage_rate": f"{mcp_calls}/{total} ({100*mcp_calls//total}%)" if total else "0%",
+        "tool_calls_total": tool_calls_total,
         "hitl_rate": f"{hitl_triggers}/{total} ({100*hitl_triggers//total}%)" if total else "0%",
+        "abstain_rate": f"{abstains}/{total} ({100*abstains//total}%)" if total else "0%",
         "top_sources": sorted(source_counts.items(), key=lambda x: -x[1])[:5],
     }
 
@@ -248,35 +258,83 @@ def compare_single_vs_multi(
         dict của comparison metrics
     """
     multi_metrics = analyze_traces(multi_traces_dir)
-
-    # TODO: Load Day 08 results nếu có
-    # Nếu không có, dùng baseline giả lập để format
     day08_baseline = {
-        "total_questions": 15,
-        "avg_confidence": 0.0,          # TODO: Điền từ Day 08 eval.py
-        "avg_latency_ms": 0,            # TODO: Điền từ Day 08
-        "abstain_rate": "?",            # TODO: Điền từ Day 08
-        "multi_hop_accuracy": "?",      # TODO: Điền từ Day 08
+        "total_questions": "N/A",
+        "faithfulness": "N/A",
+        "relevance": "N/A",
+        "context_recall": "N/A",
+        "completeness": "N/A",
+        "avg_latency_ms": "N/A",
+        "abstain_rate": "N/A",
+        "routing_visibility": "0/x (single-agent baseline)",
+        "tool_usage_rate": "0/x (no MCP in Day 08)",
     }
 
-    if day08_results_file and os.path.exists(day08_results_file):
-        with open(day08_results_file) as f:
-            day08_baseline = json.load(f)
+    parsed_day08 = _load_day08_baseline(day08_results_file)
+    if parsed_day08:
+        day08_baseline.update(parsed_day08)
 
     comparison = {
         "generated_at": datetime.now().isoformat(),
         "day08_single_agent": day08_baseline,
         "day09_multi_agent": multi_metrics,
         "analysis": {
-            "routing_visibility": "Day 09 có route_reason cho từng câu → dễ debug hơn Day 08",
-            "latency_delta": "TODO: Điền delta latency thực tế",
-            "accuracy_delta": "TODO: Điền delta accuracy thực tế từ grading",
-            "debuggability": "Multi-agent: có thể test từng worker độc lập. Single-agent: không thể.",
-            "mcp_benefit": "Day 09 có thể extend capability qua MCP không cần sửa core. Day 08 phải hard-code.",
+            "routing_visibility": (
+                f"Day 08: {day08_baseline.get('routing_visibility')} | "
+                f"Day 09: trace có supervisor_route + route_reason ở {multi_metrics.get('total_traces', 0)} traces"
+            ),
+            "latency_delta": _format_latency_delta(day08_baseline.get("avg_latency_ms"), multi_metrics.get("avg_latency_ms")),
+            "debuggability": "Multi-agent: supervisor và từng worker test độc lập được, trace chỉ ra route_reason và tool calls.",
+            "mcp_benefit": (
+                f"Day 08: {day08_baseline.get('tool_usage_rate')} | "
+                f"Day 09: {multi_metrics.get('mcp_usage_rate')} traces có MCP"
+            ),
+            "abstain_observation": (
+                f"Day 08: {day08_baseline.get('abstain_rate')} | "
+                f"Day 09: {multi_metrics.get('abstain_rate')}"
+            ),
         },
     }
 
     return comparison
+
+
+def _load_day08_baseline(day08_results_file: Optional[str]) -> dict:
+    """
+    Hỗ trợ đọc nhanh scorecard markdown của Day 08 để lấy vài metrics thật,
+    thay vì để compare report toàn placeholder.
+    """
+    if not day08_results_file or not os.path.exists(day08_results_file):
+        return {}
+
+    if day08_results_file.endswith(".json"):
+        with open(day08_results_file, encoding="utf-8") as f:
+            return json.load(f)
+
+    with open(day08_results_file, encoding="utf-8") as f:
+        content = f.read()
+
+    summary_matches = re.findall(r"\|\s*([A-Za-z ]+)\s*\|\s*([0-9.]+)/5\s*\|\s*([0-9/]+)\s*\|", content)
+    baseline = {}
+    for metric_name, score, count in summary_matches:
+        key = metric_name.strip().lower().replace(" ", "_")
+        baseline[key] = float(score)
+        baseline[f"{key}_count"] = count
+
+    per_question_count = len(re.findall(r"^\| q\d+", content, re.MULTILINE))
+    if per_question_count:
+        baseline["total_questions"] = per_question_count
+        baseline["routing_visibility"] = f"0/{per_question_count}"
+        baseline["tool_usage_rate"] = f"0/{per_question_count} (0%)"
+
+    return baseline
+
+
+def _format_latency_delta(day08_latency, day09_latency) -> str:
+    if isinstance(day08_latency, (int, float)) and isinstance(day09_latency, (int, float)):
+        delta = day09_latency - day08_latency
+        return f"{delta:+} ms"
+    return f"Day 08: {day08_latency} | Day 09: {day09_latency} ms"
 
 
 # ─────────────────────────────────────────────
@@ -300,7 +358,7 @@ def print_metrics(metrics: dict):
     """Print metrics đẹp."""
     if not metrics:
         return
-    print("\n📊 Trace Analysis:")
+    print("\nTrace Analysis:")
     for k, v in metrics.items():
         if isinstance(v, list):
             print(f"  {k}:")
@@ -315,18 +373,24 @@ def print_metrics(metrics: dict):
 
 
 if __name__ == "__main__":
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
+
     parser = argparse.ArgumentParser(description="Day 09 Lab — Trace Evaluation")
     parser.add_argument("--grading", action="store_true", help="Run grading questions")
     parser.add_argument("--analyze", action="store_true", help="Analyze existing traces")
     parser.add_argument("--compare", action="store_true", help="Compare single vs multi")
     parser.add_argument("--test-file", default="data/test_questions.json", help="Test questions file")
+    parser.add_argument("--day08-scorecard", default=None, help="Path tới scorecard markdown/json của Day 08")
     args = parser.parse_args()
 
     if args.grading:
         # Chạy grading questions
         log_file = run_grading_questions()
         if log_file:
-            print(f"\n✅ Grading log: {log_file}")
+            print(f"\nGrading log: {log_file}")
             print("   Nộp file này trước 18:00!")
 
     elif args.analyze:
@@ -336,9 +400,9 @@ if __name__ == "__main__":
 
     elif args.compare:
         # So sánh single vs multi
-        comparison = compare_single_vs_multi()
+        comparison = compare_single_vs_multi(day08_results_file=args.day08_scorecard)
         report_file = save_eval_report(comparison)
-        print(f"\n📊 Comparison report saved → {report_file}")
+        print(f"\nComparison report saved -> {report_file}")
         print("\n=== Day 08 vs Day 09 ===")
         for k, v in comparison.get("analysis", {}).items():
             print(f"  {k}: {v}")
@@ -352,8 +416,8 @@ if __name__ == "__main__":
         print_metrics(metrics)
 
         # Lưu báo cáo
-        comparison = compare_single_vs_multi()
+        comparison = compare_single_vs_multi(day08_results_file=args.day08_scorecard)
         report_file = save_eval_report(comparison)
-        print(f"\n📄 Eval report → {report_file}")
-        print("\n✅ Sprint 4 complete!")
+        print(f"\nEval report -> {report_file}")
+        print("\nSprint 4 complete!")
         print("   Next: Điền docs/ templates và viết reports/")

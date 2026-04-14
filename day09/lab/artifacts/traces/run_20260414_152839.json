@@ -10,7 +10,8 @@
       "source": "access_control_sop.txt",
       "score": 0.7513,
       "metadata": {
-        "source": "access_control_sop.txt"
+        "source": "access_control_sop.txt",
+        "chunk_index": 11
       }
     },
     {
@@ -18,6 +19,7 @@
       "source": "access_control_sop.txt",
       "score": 0.7025,
       "metadata": {
+        "chunk_index": 3,
         "source": "access_control_sop.txt"
       }
     },
@@ -26,6 +28,7 @@
       "source": "access_control_sop.txt",
       "score": 0.6379,
       "metadata": {
+        "chunk_index": 10,
         "source": "access_control_sop.txt"
       }
     },
@@ -34,6 +37,7 @@
       "source": "access_control_sop.txt",
       "score": 0.6347,
       "metadata": {
+        "chunk_index": 12,
         "source": "access_control_sop.txt"
       }
     },
@@ -42,6 +46,7 @@
       "source": "access_control_sop.txt",
       "score": 0.617,
       "metadata": {
+        "chunk_index": 8,
         "source": "access_control_sop.txt"
       }
     },
@@ -50,6 +55,7 @@
       "source": "sla_p1_2026.txt",
       "score": 0.593,
       "metadata": {
+        "chunk_index": 2,
         "source": "sla_p1_2026.txt"
       }
     },
@@ -58,21 +64,22 @@
       "source": "access_control_sop.txt",
       "score": 0.5918,
       "metadata": {
+        "chunk_index": 2,
         "source": "access_control_sop.txt"
       }
     }
   ],
   "retrieved_sources": [
-    "sla_p1_2026.txt",
-    "access_control_sop.txt"
+    "access_control_sop.txt",
+    "sla_p1_2026.txt"
   ],
   "policy_result": {
     "policy_applies": true,
     "policy_name": "refund_policy_v4",
     "exceptions_found": [],
     "source": [
-      "sla_p1_2026.txt",
-      "access_control_sop.txt"
+      "access_control_sop.txt",
+      "sla_p1_2026.txt"
     ],
     "policy_version_note": "",
     "explanation": "Analyzed via rule-based policy check. TODO: upgrade to LLM-based analysis."
@@ -100,23 +107,44 @@
         ]
       },
       "error": null,
-      "timestamp": "2026-04-14T12:02:04.982293"
+      "timestamp": "2026-04-14T15:28:43.440886"
     }
   ],
-  "final_answer": "Quy trình cấp quyền Level 3 để khắc phục sự cố P1 khẩn cấp như sau:\n\n1. **Phê duyệt**: On-call IT Admin có thể cấp quyền tạm thời (tối đa 24 giờ) sau khi được Tech Lead phê duyệt bằng lời.\n2. **Thời gian hiệu lực**: Quyền tạm thời chỉ có hiệu lực trong 24 giờ. Sau thời gian này, phải có ticket chính thức hoặc quyền sẽ bị thu hồi tự động.\n3. **Ghi log**: Tất cả quyền tạm thời phải được ghi log vào hệ thống Security Audit.\n\nLưu ý: Quy trình này áp dụng cho các trường hợp khẩn cấp như sự cố P1, khi cần cấp quyền tạm thời để khắc phục sự cố [1][3].",
+  "mcp_tool_called": [
+    "get_ticket_info"
+  ],
+  "mcp_result": [
+    {
+      "ticket_id": "IT-9847",
+      "priority": "P1",
+      "title": "API Gateway down — toàn bộ người dùng không đăng nhập được",
+      "status": "in_progress",
+      "assignee": "nguyen.van.a@company.internal",
+      "created_at": "2026-04-13T22:47:00",
+      "sla_deadline": "2026-04-14T02:47:00",
+      "escalated": true,
+      "escalated_to": "senior_engineer_team",
+      "notifications_sent": [
+        "slack:#incident-p1",
+        "email:incident@company.internal",
+        "pagerduty:oncall"
+      ]
+    }
+  ],
+  "final_answer": "Quy trình cấp quyền Level 3 để khắc phục sự cố P1 khẩn cấp như sau:\n\n1. **Phê duyệt**: On-call IT Admin cần được phê duyệt bằng lời từ Tech Lead.\n2. **Cấp quyền tạm thời**: On-call IT Admin có thể cấp quyền tạm thời tối đa 24 giờ.\n3. **Ghi log**: Mọi quyền tạm thời phải được ghi log vào hệ thống Security Audit.\n4. **Ticket chính thức**: Sau 24 giờ, phải có ticket chính thức để duy trì quyền, nếu không quyền sẽ bị thu hồi tự động. \n\nLưu ý: Quy trình này áp dụng cho các trường hợp khẩn cấp như sự cố P1, khi cần cấp quyền tạm thời để khắc phục sự cố [1][3].",
   "sources": [
-    "sla_p1_2026.txt",
-    "access_control_sop.txt"
+    "access_control_sop.txt",
+    "sla_p1_2026.txt"
   ],
   "confidence": 1.0,
   "history": [
     "[supervisor] received task: Cần cấp quyền Level 3 để khắc phục P1 khẩn cấp. Quy trình là gì?",
     "[supervisor] route=policy_tool_worker reason=policy/access keyword detected: 'level 3' | risk_high flagged: 'khẩn cấp'",
-    "[retrieval_worker] retrieved 7 chunks from ['sla_p1_2026.txt', 'access_control_sop.txt']",
+    "[retrieval_worker] retrieved 7 chunks from ['access_control_sop.txt', 'sla_p1_2026.txt']",
     "[policy_tool_worker] called MCP get_ticket_info",
     "[policy_tool_worker] policy_applies=True, exceptions=0",
-    "[synthesis_worker] answer generated, confidence=1.0, sources=['sla_p1_2026.txt', 'access_control_sop.txt']",
-    "[graph] completed in 12817ms"
+    "[synthesis_worker] answer generated, confidence=1.0, sources=['access_control_sop.txt', 'sla_p1_2026.txt']",
+    "[graph] completed in 9158ms"
   ],
   "workers_called": [
     "retrieval_worker",
@@ -124,8 +152,8 @@
     "synthesis_worker"
   ],
   "supervisor_route": "policy_tool_worker",
-  "latency_ms": 12817,
-  "run_id": "run_20260414_120158",
+  "latency_ms": 9158,
+  "run_id": "run_20260414_152839",
   "retrieval_top_k": 7,
   "worker_io_logs": [
     {
@@ -137,8 +165,8 @@
       "output": {
         "chunks_count": 7,
         "sources": [
-          "sla_p1_2026.txt",
-          "access_control_sop.txt"
+          "access_control_sop.txt",
+          "sla_p1_2026.txt"
         ]
       },
       "error": null
@@ -165,10 +193,10 @@
         "has_policy": true
       },
       "output": {
-        "answer_length": 550,
+        "answer_length": 560,
         "sources": [
-          "sla_p1_2026.txt",
-          "access_control_sop.txt"
+          "access_control_sop.txt",
+          "sla_p1_2026.txt"
         ],
         "confidence": 1.0
       },
