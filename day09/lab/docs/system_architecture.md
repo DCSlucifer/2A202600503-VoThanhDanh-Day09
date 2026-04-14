@@ -1,7 +1,14 @@
 # System Architecture — Lab Day 09
 
-**Nhóm:** 2A202600502-Trương Hầu Minh Kiệt, 2A202600503-Võ Thành Danh
-**Ngày:** 2026-04-14  
+**Tên nhóm:** 2A202600502-Trương Hầu Minh Kiệt, 2A202600503-Võ Thành Danh
+**Thành viên:**
+| Tên | Vai trò | Email |
+|-----|---------|-------|
+| Võ Thành Danh | Supervisor Owner | ___ |
+| Võ Thành Danh | Worker Owner | ___ |
+| Trương Hầu Minh Kiệt | MCP Owner | ___ |
+| Trương Hầu Minh Kiệt | Trace & Docs Owner | ___ |
+**Ngày:** 2026-04-14
 **Version:** 1.1
 
 ---

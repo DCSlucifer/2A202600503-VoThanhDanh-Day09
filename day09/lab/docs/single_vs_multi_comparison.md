@@ -1,6 +1,13 @@
 # Single Agent vs Multi-Agent Comparison — Lab Day 09
 
-**Nhóm:** 2A202600502-Trương Hầu Minh Kiệt, 2A202600503-Võ Thành Danh 
+**Tên nhóm:** 2A202600502-Trương Hầu Minh Kiệt, 2A202600503-Võ Thành Danh
+**Thành viên:**
+| Tên | Vai trò | Email |
+|-----|---------|-------|
+| Võ Thành Danh | Supervisor Owner | ___ |
+| Võ Thành Danh | Worker Owner | ___ |
+| Trương Hầu Minh Kiệt | MCP Owner | ___ |
+| Trương Hầu Minh Kiệt | Trace & Docs Owner | ___ |
 **Ngày:** 2026-04-14
 
 Nguồn số liệu:
@@ -35,7 +42,7 @@ Hai metric so sánh thực tế rõ nhất là `Observable routing traces` và `
 | Latency | Không có log cụ thể | Trung bình batch 15 câu là `8,431 ms` |
 | Observation | Single-agent trả lời nhanh gọn hơn về mặt flow | Day 09 route đúng, nhưng phụ thuộc nhiều hơn vào trạng thái retrieval local |
 
-**Kết luận:**  
+**Kết luận:**
 Với câu một tài liệu, multi-agent không tự động tốt hơn về answer quality. Giá trị lớn nhất của Day 09 ở đây là quan sát được pipeline, không phải giảm latency.
 
 ### 2.2 Câu hỏi multi-hop (cross-document)
@@ -46,7 +53,7 @@ Với câu một tài liệu, multi-agent không tự động tốt hơn về an
 | Routing visible? | `0/10` | `15/15` |
 | Observation | Khó biết fail nằm ở retrieval hay reasoning | Trace `run_20260414_120158.json` cho thấy route đúng, workers đúng, nhưng answer vẫn cần policy logic chặt hơn |
 
-**Kết luận:**  
+**Kết luận:**
 Multi-agent giúp bài multi-hop dễ debug hơn rất nhiều. Khi câu hỏi khó, chỉ cần nhìn `workers_called` và `mcp_tools_used` là biết pipeline đã “đi đúng đường” hay chưa.
 
 ### 2.3 Câu hỏi cần abstain
@@ -57,7 +64,7 @@ Multi-agent giúp bài multi-hop dễ debug hơn rất nhiều. Khi câu hỏi k
 | Hallucination cases | Có vài câu trả lời quá ngắn kiểu “liên hệ bộ phận liên quan” | Có trace mới bị abstain vì collection local trống |
 | Observation | Single-agent biết abstain nhưng không giải thích được vì sao | Day 09 khi abstain thì trace cho thấy ngay `retrieved_chunks=[]` và không có source |
 
-**Kết luận:**  
+**Kết luận:**
 Tỷ lệ abstain của Day 09 hiện cao hơn trên bộ trace đang có, nhưng bù lại lý do abstain minh bạch hơn hẳn. Đây là chỗ observability thắng chất lượng tạm thời.
 
 ---
@@ -81,7 +88,7 @@ Khi answer sai -> đọc trace -> xem supervisor_route + route_reason
 Thời gian ước tính: 5-7 phút để khoanh vùng cùng loại lỗi
 ```
 
-**Câu cụ thể nhóm đã debug:**  
+**Câu cụ thể nhóm đã debug:**
 Ở các trace `run_20260414_144528.json`, `run_20260414_144627.json`, `run_20260414_144640.json`, câu trả lời bắt đầu abstain dù route vẫn đúng. Trace cho thấy `retrieved_chunks=[]`, từ đó khoanh vùng được vấn đề nằm ở local Chroma collection trống chứ không phải supervisor route. Đây là lý do nhóm thêm bootstrap index vào `workers/retrieval.py`.
 
 ---
@@ -95,7 +102,7 @@ Thời gian ước tính: 5-7 phút để khoanh vùng cùng loại lỗi
 | Thay đổi retrieval strategy | Sửa trực tiếp trong RAG core | Sửa `retrieval_worker` độc lập |
 | A/B test một phần | Khó | Dễ hơn vì từng module tách biệt |
 
-**Nhận xét:**  
+**Nhận xét:**
 Day 09 phù hợp hơn cho bài toán nội bộ có nhiều policy/domain nhỏ vì team có thể thay worker hoặc tool mà không phải đụng toàn bộ pipeline.
 
 ---
@@ -108,7 +115,7 @@ Day 09 phù hợp hơn cho bài toán nội bộ có nhiều policy/domain nhỏ
 | Complex query | `1` LLM call | `1` synthesis call + `0-2` MCP calls |
 | MCP tool call | `N/A` | `2` tool calls trên batch `15` câu mới nhất |
 
-**Nhận xét về cost-benefit:**  
+**Nhận xét về cost-benefit:**
 Multi-agent không rẻ hơn. Ngược lại, nó tăng overhead orchestration và đôi khi tăng latency. Bù lại, nó cho visibility, traceability và khả năng mở rộng tốt hơn. Với lab này, lợi ích chính của Day 09 là debug và kiểm soát flow, không phải tối ưu tốc độ.
 
 ---
