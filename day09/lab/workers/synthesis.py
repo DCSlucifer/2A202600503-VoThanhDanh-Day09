@@ -254,6 +254,9 @@ def run(state: dict) -> dict:
 # ─────────────────────────────────────────────
 
 if __name__ == "__main__":
+    import sys
+    sys.stdout.reconfigure(encoding='utf-8')
+
     print("=" * 50)
     print("Synthesis Worker — Standalone Test")
     print("=" * 50)
