@@ -12,6 +12,7 @@
 **Module/file tôi chịu trách nhiệm:**
 - Sprint 1: `graph.py` — `AgentState` (17 fields), `supervisor_node`, `route_decision`, `human_review_node`, `build_graph`, `run_graph`, `save_trace`
 - Sprint 2: `workers/retrieval.py` — `retrieve_dense`, `_get_embedding_fn`, `_get_collection`, `_bootstrap_collection_if_empty`, `_chunk_document`, `run`; `workers/policy_tool.py` — `analyze_policy`, `_call_mcp_tool`, `run`; `workers/synthesis.py` — `synthesize`, `_call_llm`, `_build_context`, `_estimate_confidence`, `_judge_confidence`, `run`; `contracts/worker_contracts.yaml` — toàn bộ contract cho supervisor, 3 workers và MCP server
+- Sprint 3 (Bonus): `app.py`, `templates/index.html`, `static/style.css`, `static/app.js` — Phát triển toàn bộ hệ thống Web UI "Multi-Agent Supervisor" phục vụ demo và audit.
 
 **Cách công việc của tôi kết nối với phần của thành viên khác:**
 
@@ -121,6 +122,17 @@ Toàn bộ pipeline chạy qua `graph.py` — nếu tôi chưa xong Sprint 1, Ki
 **Phần tôi phụ thuộc vào thành viên khác:**
 
 Tôi cần `mcp_server.py` từ Kiệt để `_call_mcp_tool()` trong `policy_tool.py` gọi được `dispatch_tool()`. Nếu MCP server chưa implement, policy worker vẫn chạy nhưng mất khả năng gọi tool (trace sẽ không có `mcp_tools_used`).
+
+---
+
+## 4.5. Đóng góp Bonus: Web UI Multi-Agent
+
+Khác với Day 08 chỉ là RAG tuyến tính, hệ Multi-Agent Day 09 rất khó để hiểu nếu chỉ xem log trên terminal. Do đó, tôi đã build một **Fullstack Web UI (Flask backend + JS/HTML/CSS Frontend)** tích hợp với API của Agent Graph để trực quan hóa kiến trúc này trước lớp.
+
+**Nổi bật:**
+1. **Agent Trace Visualizer:** Khi nhập query, hệ thống vẽ một sơ đồ dạng timeline hiển thị rõ Agent đã chạy qua các node nào: Supervisor -> Human Review (chờ duyệt) -> Retrieval Worker -> Synthesis Worker. Các badge thông báo (ví dụ: `RISK_HIGH`, `NEEDS_TOOL`) được bắn ra ngay thời gian thực.
+2. **Interactive Human-In-The-Loop (HITL) Popup:** Backend Flask được chia thành các phase `analyze` và `execute` để hỗ trợ cơ chế pause luồng. Nếu Supervisor bắt được keyword nguy cấp ("khẩn cấp 2am"), Backend trả cờ cho Frontend popup 1 màn hình cảnh báo, yêu cầu người thật bấm "Approve" (Tiếp tục gọi Retrieval) hoặc "Deny" (Hủy toàn bộ query) trước khi pipeline chạy tiếp.
+3. **Trace Explorer Dashboard:** Tự động quyét và load toàn bộ dữ liệu lịch sử từ thư mục `artifacts/traces/` để thầy cô có thể "kiểm toán" (audit) lại các run trước đó đã rẽ nhánh thế nào, có bị LLM-as-judge chấm tịt hay không dưới dạng JSON Highlight đẹp mắt. Giao diện được mang tone màu mới **Emerald Cyberpunk** cho thấy sự thăng cấp về hệ thống.
 
 ---
 

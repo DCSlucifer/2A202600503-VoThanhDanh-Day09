@@ -1,0 +1,59 @@
+{
+  "confidence": 0.9,
+  "final_answer": "Không đủ thông tin trong tài liệu nội bộ.",
+  "history": [
+    "[supervisor] received task: SLA xử lý ticket P1 là bao lâu?",
+    "[supervisor] route=retrieval_worker reason=SLA/incident/HR keyword detected: 'p1'",
+    "[retrieval_worker] retrieved 0 chunks from []",
+    "[synthesis_worker] answer generated, confidence=0.9, sources=[]",
+    "[graph] completed in 4504ms"
+  ],
+  "hitl_triggered": false,
+  "latency_ms": 4504,
+  "mcp_result": [],
+  "mcp_tool_called": [],
+  "mcp_tools_used": [],
+  "needs_tool": false,
+  "policy_result": {},
+  "retrieved_chunks": [],
+  "retrieved_sources": [],
+  "risk_high": false,
+  "route_reason": "SLA/incident/HR keyword detected: 'p1'",
+  "run_id": "run_20260414_225926",
+  "sources": [],
+  "supervisor_route": "retrieval_worker",
+  "task": "SLA xử lý ticket P1 là bao lâu?",
+  "workers_called": [
+    "retrieval_worker",
+    "synthesis_worker"
+  ],
+  "retrieval_top_k": 7,
+  "worker_io_logs": [
+    {
+      "worker": "retrieval_worker",
+      "input": {
+        "task": "SLA xử lý ticket P1 là bao lâu?",
+        "top_k": 7
+      },
+      "output": {
+        "chunks_count": 0,
+        "sources": []
+      },
+      "error": null
+    },
+    {
+      "worker": "synthesis_worker",
+      "input": {
+        "task": "SLA xử lý ticket P1 là bao lâu?",
+        "chunks_count": 0,
+        "has_policy": false
+      },
+      "output": {
+        "answer_length": 41,
+        "sources": [],
+        "confidence": 0.9
+      },
+      "error": null
+    }
+  ]
+}

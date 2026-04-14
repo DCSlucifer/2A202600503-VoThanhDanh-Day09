@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 09 — Multi-Agent Supervisor</title>
+    <meta name="description" content="Day 09: Refactoring RAG pipeline into a robust Multi-Agent System with Supervisor, Workers, and HITL.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- Cyberpunk Ambient Background -->
+    <div class="ambient-bg">
+        <div class="matrix-grid"></div>
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-content">
+            <div class="logo-group">
+                <div class="logo-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" class="emerald-glow" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                        <polyline points="2 17 12 22 22 17"></polyline>
+                        <polyline points="2 12 12 17 22 12"></polyline>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="logo-text">Multi-Agent System</h1>
+                    <span class="logo-sub">Day 09 Lab — Supervisor & Workers Architecture</span>
+                </div>
+            </div>
+            <div class="header-status" id="header-status">
+                <span class="status-dot"></span>
+                <span class="status-text">System Online</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="tab-nav">
+        <div class="tab-nav-inner">
+            <button class="tab-btn active" data-tab="agent" id="tab-agent">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                </svg>
+                Agent Chat & Routing
+            </button>
+            <button class="tab-btn" data-tab="traces" id="tab-traces">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="8" y1="6" x2="21" y2="6"></line>
+                    <line x1="8" y1="12" x2="21" y2="12"></line>
+                    <line x1="8" y1="18" x2="21" y2="18"></line>
+                    <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                    <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                    <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                </svg>
+                Trace Explorer
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        
+        <!-- ==================== AGENT CHAT TAB ==================== -->
+        <section class="tab-panel active" id="panel-agent">
+            <div class="agent-layout">
+                <!-- Left: Chat -->
+                <div class="chat-main">
+                    <div class="chat-messages" id="chat-messages">
+                        <div class="welcome-card neon-card">
+                            <div class="welcome-icon">⚡</div>
+                            <h2>Supervisor Orchestration</h2>
+                            <p>Test the multi-agent system. The <strong>Supervisor</strong> will route your query to the correct worker (Retrieval, Policy Tool, or Human Review).</p>
+                            <div class="example-queries">
+                                <span class="example-label">Try asking:</span>
+                                <button class="example-btn" onclick="fillQuery('SLA xử lý ticket P1 là bao lâu?')">SLA P1? (Retrieval)</button>
+                                <button class="example-btn" onclick="fillQuery('Cần cấp quyền Level 3. Admin access quy trình là gì?')">Cấp quyền? (Policy Tool)</button>
+                                <button class="example-btn" onclick="fillQuery('Hệ thống sập, lỗi ERR-502-GATE đang lan rộng khẩn cấp 2am!')">ERR-502 gấp! (HITL)</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-input-area">
+                        <form class="chat-form" id="chat-form" onsubmit="sendChat(event)">
+                            <input type="text" id="chat-input" placeholder="Nhập yêu cầu vào hệ thống đa đại lý..." autocomplete="off">
+                            <button type="submit" class="send-btn" id="send-btn">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                </svg>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Right: Agent Graph Trace Visualizer -->
+                <aside class="trace-sidebar" id="trace-sidebar">
+                    <div class="sidebar-header">
+                        <h3>🕸️ Execution Trace</h3>
+                        <span class="latency-badge" id="trace-latency">0ms</span>
+                    </div>
+                    <div class="sidebar-content" id="sidebar-trace-nodes">
+                        <div class="sidebar-empty">
+                            <p>Submit a query to visualize the agent routing graph.</p>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <!-- ==================== TRACE EXPLORER TAB ==================== -->
+        <section class="tab-panel" id="panel-traces">
+            <div class="traces-layout">
+                <!-- Left: Trace List -->
+                <div class="trace-list-panel">
+                    <div class="traces-header">
+                        <h2>🗂️ Trace Logs</h2>
+                        <button class="btn btn-outline btn-sm" onclick="loadTraces()">Refresh</button>
+                    </div>
+                    <div class="trace-list-container" id="trace-list-container">
+                        <p class="text-muted">Loading traces...</p>
+                    </div>
+                </div>
+                
+                <!-- Right: Trace Detail -->
+                <div class="trace-detail-panel">
+                    <div class="trace-detail-header">
+                        <h3>Raw State JSON</h3>
+                        <span class="trace-id" id="detail-trace-id">Select a trace</span>
+                    </div>
+                    <div class="trace-json-container">
+                        <pre><code id="trace-json-view">No trace selected.</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- HITL Modal overlay -->
+    <div class="hitl-overlay" id="hitl-overlay">
+        <div class="hitl-modal neon-card danger">
+            <div class="hitl-header">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="danger-icon">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                <h2>Human-in-the-Loop Required</h2>
+            </div>
+            
+            <div class="hitl-body">
+                <p>The Supervisor has flagged this query as **high risk** and paused execution.</p>
+                <div class="hitl-details">
+                    <div class="hitl-row">
+                        <span class="hitl-label">Task:</span>
+                        <span class="hitl-value" id="hitl-task">...</span>
+                    </div>
+                    <div class="hitl-row">
+                        <span class="hitl-label">Flag Reason:</span>
+                        <span class="hitl-value" id="hitl-reason">...</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hitl-footer">
+                <button class="btn btn-danger btn-lg" onclick="handleHITL('deny')">
+                    🚫 Deny Action
+                </button>
+                <button class="btn btn-accent btn-lg" onclick="handleHITL('approve')">
+                    ✅ Approve & Continue
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+    <script src="/static/app.js"></script>
+</body>
+</html>

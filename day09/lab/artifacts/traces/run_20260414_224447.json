@@ -1,0 +1,61 @@
+{
+  "confidence": 0.9,
+  "final_answer": "Không đủ thông tin trong tài liệu nội bộ.",
+  "history": [
+    "[supervisor] received task: Hệ thống sập, lỗi ERR-502-GATE đang lan rộng khẩn cấp 2am!",
+    "[supervisor] route=human_review reason=unknown error code 'err-502-gate' with no recognized context | risk_high flagged: 'khẩn cấp'",
+    "[human_review] HITL triggered — awaiting human input",
+    "[retrieval_worker] retrieved 0 chunks from []",
+    "[synthesis_worker] answer generated, confidence=0.9, sources=[]",
+    "[graph] completed in 34903ms"
+  ],
+  "hitl_triggered": true,
+  "latency_ms": 34903,
+  "mcp_result": [],
+  "mcp_tool_called": [],
+  "mcp_tools_used": [],
+  "needs_tool": false,
+  "policy_result": {},
+  "retrieved_chunks": [],
+  "retrieved_sources": [],
+  "risk_high": true,
+  "route_reason": "unknown error code 'err-502-gate' with no recognized context | risk_high flagged: 'khẩn cấp' | human approved → retrieval",
+  "run_id": "run_20260414_224447",
+  "sources": [],
+  "supervisor_route": "retrieval_worker",
+  "task": "Hệ thống sập, lỗi ERR-502-GATE đang lan rộng khẩn cấp 2am!",
+  "workers_called": [
+    "human_review",
+    "retrieval_worker",
+    "synthesis_worker"
+  ],
+  "retrieval_top_k": 7,
+  "worker_io_logs": [
+    {
+      "worker": "retrieval_worker",
+      "input": {
+        "task": "Hệ thống sập, lỗi ERR-502-GATE đang lan rộng khẩn cấp 2am!",
+        "top_k": 7
+      },
+      "output": {
+        "chunks_count": 0,
+        "sources": []
+      },
+      "error": null
+    },
+    {
+      "worker": "synthesis_worker",
+      "input": {
+        "task": "Hệ thống sập, lỗi ERR-502-GATE đang lan rộng khẩn cấp 2am!",
+        "chunks_count": 0,
+        "has_policy": false
+      },
+      "output": {
+        "answer_length": 41,
+        "sources": [],
+        "confidence": 0.9
+      },
+      "error": null
+    }
+  ]
+}
