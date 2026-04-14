@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(python3 -c ':*)",
-      "Bash(python -c ':*)",
-      "Bash(findstr /V \"Warning Loading weights BertModel UNEXPECTED authenticated HF_TOKEN Notes\")"
-    ]
-  }
-}
