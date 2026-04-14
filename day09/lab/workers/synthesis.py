@@ -16,7 +16,11 @@ Gọi độc lập để test:
     python workers/synthesis.py
 """
 
+import json
+import logging
 import os
+from typing import Optional
+
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -118,12 +122,11 @@ def _estimate_confidence(chunks: list, answer: str, policy_result: dict) -> floa
     return round(max(0.1, confidence), 2)
 
 
-def _judge_confidence(task: str, context: str, answer: str) -> "Optional[float]":
+def _judge_confidence(task: str, context: str, answer: str) -> Optional[float]:
     """
     LLM-as-Judge: second LLM call to rate answer quality.
     Returns float in [0.0, 1.0], or None if call fails (triggers rule-based fallback).
     """
-    import json
     judge_system = (
         "You are a QA judge for an internal helpdesk system. "
         "Rate from 0.0 to 1.0 how well the answer addresses the question "
@@ -156,7 +159,8 @@ def _judge_confidence(task: str, context: str, answer: str) -> "Optional[float]"
         data = json.loads(raw)
         score = float(data["score"])
         return round(min(max(score, 0.0), 1.0), 2)
-    except Exception:
+    except Exception as exc:
+        logging.debug("_judge_confidence failed: %s", exc)
         return None  # caller uses rule-based fallback
 
 
