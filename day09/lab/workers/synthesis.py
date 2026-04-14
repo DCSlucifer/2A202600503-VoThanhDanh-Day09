@@ -17,6 +17,8 @@ Gọi độc lập để test:
 """
 
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 WORKER_NAME = "synthesis_worker"
 
@@ -116,6 +118,48 @@ def _estimate_confidence(chunks: list, answer: str, policy_result: dict) -> floa
     return round(max(0.1, confidence), 2)
 
 
+def _judge_confidence(task: str, context: str, answer: str) -> "Optional[float]":
+    """
+    LLM-as-Judge: second LLM call to rate answer quality.
+    Returns float in [0.0, 1.0], or None if call fails (triggers rule-based fallback).
+    """
+    import json
+    judge_system = (
+        "You are a QA judge for an internal helpdesk system. "
+        "Rate from 0.0 to 1.0 how well the answer addresses the question "
+        "using ONLY the provided context (not outside knowledge). "
+        "0.0 = completely wrong or hallucinated. "
+        "1.0 = fully correct and grounded in context. "
+        "If the answer says 'not enough information' and context truly lacks the info, score 0.9. "
+        'Output valid JSON only, no other text: {"score": 0.85}'
+    )
+    context_summary = context[:600] if len(context) > 600 else context
+    answer_summary = answer[:400] if len(answer) > 400 else answer
+    user_msg = (
+        f"Question: {task}\n\n"
+        f"Context provided:\n{context_summary}\n\n"
+        f"Answer to rate:\n{answer_summary}"
+    )
+    try:
+        from openai import OpenAI
+        client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        resp = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": judge_system},
+                {"role": "user", "content": user_msg},
+            ],
+            temperature=0,
+            max_tokens=20,
+        )
+        raw = resp.choices[0].message.content.strip()
+        data = json.loads(raw)
+        score = float(data["score"])
+        return round(min(max(score, 0.0), 1.0), 2)
+    except Exception:
+        return None  # caller uses rule-based fallback
+
+
 def synthesize(task: str, chunks: list, policy_result: dict) -> dict:
     """
     Tổng hợp câu trả lời từ chunks và policy context.
@@ -140,7 +184,10 @@ Hãy trả lời câu hỏi dựa vào tài liệu trên."""
 
     answer = _call_llm(messages)
     sources = list({c.get("source", "unknown") for c in chunks})
-    confidence = _estimate_confidence(chunks, answer, policy_result)
+
+    # LLM-as-Judge confidence (bonus +1). Falls back to rule-based if LLM fails.
+    judge_score = _judge_confidence(task, context, answer)
+    confidence = judge_score if judge_score is not None else _estimate_confidence(chunks, answer, policy_result)
 
     return {
         "answer": answer,
