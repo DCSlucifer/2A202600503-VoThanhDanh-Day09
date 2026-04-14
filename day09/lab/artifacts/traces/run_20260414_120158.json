@@ -1,0 +1,178 @@
+{
+  "task": "Cần cấp quyền Level 3 để khắc phục P1 khẩn cấp. Quy trình là gì?",
+  "route_reason": "policy/access keyword detected: 'level 3' | risk_high flagged: 'khẩn cấp'",
+  "risk_high": true,
+  "needs_tool": true,
+  "hitl_triggered": false,
+  "retrieved_chunks": [
+    {
+      "text": "Quy trình escalation khẩn cấp:\n1. On-call IT Admin có thể cấp quyền tạm thời (max 24 giờ) sau khi được Tech Lead phê duyệt bằng lời.\n2. Sau 24 giờ, phải có ticket chính thức hoặc quyền bị thu hồi tự động.\n3. Mọi quyền tạm thời phải được ghi log vào hệ thống Security Audit.",
+      "source": "access_control_sop.txt",
+      "score": 0.7513,
+      "metadata": {
+        "source": "access_control_sop.txt"
+      }
+    },
+    {
+      "text": "=== Section 2: Phân cấp quyền truy cập ===",
+      "source": "access_control_sop.txt",
+      "score": 0.7025,
+      "metadata": {
+        "source": "access_control_sop.txt"
+      }
+    },
+    {
+      "text": "=== Section 4: Escalation khi cần thay đổi quyền hệ thống ===\nEscalation chỉ áp dụng khi cần thay đổi quyền hệ thống ngoài quy trình thông thường.\nVí dụ: Khẩn cấp trong sự cố P1, cần cấp quyền tạm thời để fix incident.",
+      "source": "access_control_sop.txt",
+      "score": 0.6379,
+      "metadata": {
+        "source": "access_control_sop.txt"
+      }
+    },
+    {
+      "text": "=== Section 5: Thu hồi quyền truy cập ===\nQuyền phải được thu hồi trong các trường hợp:\n- Nhân viên nghỉ việc: Thu hồi ngay trong ngày cuối.\n- Hết hạn contract: Thu hồi đúng ngày hết hạn.\n- Chuyển bộ phận: Điều chỉnh trong 3 ngày làm việc.",
+      "source": "access_control_sop.txt",
+      "score": 0.6347,
+      "metadata": {
+        "source": "access_control_sop.txt"
+      }
+    },
+    {
+      "text": "=== Section 3: Quy trình yêu cầu cấp quyền ===",
+      "source": "access_control_sop.txt",
+      "score": 0.617,
+      "metadata": {
+        "source": "access_control_sop.txt"
+      }
+    },
+    {
+      "text": "P1 — CRITICAL (Khẩn cấp):\nĐịnh nghĩa: Sự cố ảnh hưởng toàn bộ hệ thống production, không có workaround.\nVí dụ: Database sập, API gateway down, toàn bộ người dùng không thể đăng nhập.",
+      "source": "sla_p1_2026.txt",
+      "score": 0.593,
+      "metadata": {
+        "source": "sla_p1_2026.txt"
+      }
+    },
+    {
+      "text": "=== Section 1: Phạm vi và mục đích ===\nTài liệu này quy định quy trình cấp phép truy cập vào các hệ thống nội bộ của công ty.\nÁp dụng cho tất cả nhân viên, contractor, và third-party vendor.",
+      "source": "access_control_sop.txt",
+      "score": 0.5918,
+      "metadata": {
+        "source": "access_control_sop.txt"
+      }
+    }
+  ],
+  "retrieved_sources": [
+    "sla_p1_2026.txt",
+    "access_control_sop.txt"
+  ],
+  "policy_result": {
+    "policy_applies": true,
+    "policy_name": "refund_policy_v4",
+    "exceptions_found": [],
+    "source": [
+      "sla_p1_2026.txt",
+      "access_control_sop.txt"
+    ],
+    "policy_version_note": "",
+    "explanation": "Analyzed via rule-based policy check. TODO: upgrade to LLM-based analysis."
+  },
+  "mcp_tools_used": [
+    {
+      "tool": "get_ticket_info",
+      "input": {
+        "ticket_id": "P1-LATEST"
+      },
+      "output": {
+        "ticket_id": "IT-9847",
+        "priority": "P1",
+        "title": "API Gateway down — toàn bộ người dùng không đăng nhập được",
+        "status": "in_progress",
+        "assignee": "nguyen.van.a@company.internal",
+        "created_at": "2026-04-13T22:47:00",
+        "sla_deadline": "2026-04-14T02:47:00",
+        "escalated": true,
+        "escalated_to": "senior_engineer_team",
+        "notifications_sent": [
+          "slack:#incident-p1",
+          "email:incident@company.internal",
+          "pagerduty:oncall"
+        ]
+      },
+      "error": null,
+      "timestamp": "2026-04-14T12:02:04.982293"
+    }
+  ],
+  "final_answer": "Quy trình cấp quyền Level 3 để khắc phục sự cố P1 khẩn cấp như sau:\n\n1. **Phê duyệt**: On-call IT Admin có thể cấp quyền tạm thời (tối đa 24 giờ) sau khi được Tech Lead phê duyệt bằng lời.\n2. **Thời gian hiệu lực**: Quyền tạm thời chỉ có hiệu lực trong 24 giờ. Sau thời gian này, phải có ticket chính thức hoặc quyền sẽ bị thu hồi tự động.\n3. **Ghi log**: Tất cả quyền tạm thời phải được ghi log vào hệ thống Security Audit.\n\nLưu ý: Quy trình này áp dụng cho các trường hợp khẩn cấp như sự cố P1, khi cần cấp quyền tạm thời để khắc phục sự cố [1][3].",
+  "sources": [
+    "sla_p1_2026.txt",
+    "access_control_sop.txt"
+  ],
+  "confidence": 1.0,
+  "history": [
+    "[supervisor] received task: Cần cấp quyền Level 3 để khắc phục P1 khẩn cấp. Quy trình là gì?",
+    "[supervisor] route=policy_tool_worker reason=policy/access keyword detected: 'level 3' | risk_high flagged: 'khẩn cấp'",
+    "[retrieval_worker] retrieved 7 chunks from ['sla_p1_2026.txt', 'access_control_sop.txt']",
+    "[policy_tool_worker] called MCP get_ticket_info",
+    "[policy_tool_worker] policy_applies=True, exceptions=0",
+    "[synthesis_worker] answer generated, confidence=1.0, sources=['sla_p1_2026.txt', 'access_control_sop.txt']",
+    "[graph] completed in 12817ms"
+  ],
+  "workers_called": [
+    "retrieval_worker",
+    "policy_tool_worker",
+    "synthesis_worker"
+  ],
+  "supervisor_route": "policy_tool_worker",
+  "latency_ms": 12817,
+  "run_id": "run_20260414_120158",
+  "retrieval_top_k": 7,
+  "worker_io_logs": [
+    {
+      "worker": "retrieval_worker",
+      "input": {
+        "task": "Cần cấp quyền Level 3 để khắc phục P1 khẩn cấp. Quy trình là gì?",
+        "top_k": 7
+      },
+      "output": {
+        "chunks_count": 7,
+        "sources": [
+          "sla_p1_2026.txt",
+          "access_control_sop.txt"
+        ]
+      },
+      "error": null
+    },
+    {
+      "worker": "policy_tool_worker",
+      "input": {
+        "task": "Cần cấp quyền Level 3 để khắc phục P1 khẩn cấp. Quy trình là gì?",
+        "chunks_count": 7,
+        "needs_tool": true
+      },
+      "output": {
+        "policy_applies": true,
+        "exceptions_count": 0,
+        "mcp_calls": 1
+      },
+      "error": null
+    },
+    {
+      "worker": "synthesis_worker",
+      "input": {
+        "task": "Cần cấp quyền Level 3 để khắc phục P1 khẩn cấp. Quy trình là gì?",
+        "chunks_count": 7,
+        "has_policy": true
+      },
+      "output": {
+        "answer_length": 550,
+        "sources": [
+          "sla_p1_2026.txt",
+          "access_control_sop.txt"
+        ],
+        "confidence": 1.0
+      },
+      "error": null
+    }
+  ]
+}

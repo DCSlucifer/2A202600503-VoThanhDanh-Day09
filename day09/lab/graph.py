@@ -292,6 +292,8 @@ def save_trace(state: AgentState, output_dir: str = "./artifacts/traces") -> str
 # ─────────────────────────────────────────────
 
 if __name__ == "__main__":
+    import sys
+    sys.stdout.reconfigure(encoding='utf-8')
     print("=" * 60)
     print("Day 09 Lab — Supervisor-Worker Graph")
     print("=" * 60)
