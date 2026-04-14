@@ -197,8 +197,8 @@ from workers.synthesis import run as synthesis_run
 
 
 def retrieval_worker_node(state: AgentState) -> AgentState:
-    """Wrapper gọi retrieval worker. top_k=7 cho tất cả queries để đảm bảo chunk quan trọng không bị bỏ sót."""
-    state["retrieval_top_k"] = 7
+    """Wrapper gọi retrieval worker. top_k=7 ensures P1 SLA chunk (ranked 7th) is captured."""
+    state["retrieval_top_k"] = 7  # P1 SLA chunk ranks 7th; lower values cause abstain
     return retrieval_run(state)
 
 
@@ -235,12 +235,11 @@ def build_graph():
         state = supervisor_node(state)
 
         # Step 2: Human review interrupt (before retrieval)
-        route = route_decision(state)
-        if route == "human_review":
+        if route_decision(state) == "human_review":
             state = human_review_node(state)
 
         # Step 3: Retrieval ALWAYS runs first
-        # top_k=5 for policy questions to capture chunks from multiple docs
+        # top_k=7 always (P1 SLA chunk ranked 7th; conditional 5/3 caused abstain)
         state = retrieval_worker_node(state)
 
         # Step 4: Policy tool worker if routed there
