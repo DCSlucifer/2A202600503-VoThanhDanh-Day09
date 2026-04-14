@@ -13,6 +13,9 @@ import json
 import os
 from datetime import datetime
 from typing import TypedDict, Literal, Optional
+import re
+from dotenv import load_dotenv
+load_dotenv()
 
 # Uncomment nếu dùng LangGraph:
 # from langgraph.graph import StateGraph, END
@@ -89,36 +92,43 @@ def supervisor_node(state: AgentState) -> AgentState:
     task = state["task"].lower()
     state["history"].append(f"[supervisor] received task: {state['task'][:80]}")
 
-    # --- TODO: Implement routing logic ---
-    # Gợi ý:
-    # - "hoàn tiền", "refund", "flash sale", "license" → policy_tool_worker
-    # - "cấp quyền", "access level", "level 3", "emergency" → policy_tool_worker
-    # - "P1", "escalation", "sla", "ticket" → retrieval_worker
-    # - mã lỗi không rõ (ERR-XXX), không đủ context → human_review
-    # - còn lại → retrieval_worker
+    policy_keywords = [
+        "hoàn tiền", "refund", "flash sale", "license", "kỹ thuật số",
+        "store credit", "hoàn trả", "cấp quyền", "access level",
+        "level 2", "level 3", "level 4", "quyền truy cập",
+        "admin access", "contractor", "cấp phép",
+    ]
+    retrieval_explicit = [
+        "p1", "sla", "escalation", "ticket", "sự cố",
+        "on-call", "incident", "resolution", "phản hồi",
+        "probation", "thử việc", "remote", "nghỉ phép",
+        "mật khẩu", "password", "tài khoản",
+    ]
+    risk_keywords = ["khẩn cấp", "emergency", "2am", "gấp", "urgent"]
+    error_code = re.search(r'\berr-\w+', task)
 
-    route = "retrieval_worker"         # TODO: thay bằng logic thực
-    route_reason = "default route"    # TODO: thay bằng lý do thực
+    route = "retrieval_worker"
+    route_reason = "default: no specific keyword matched, using retrieval"
     needs_tool = False
-    risk_high = False
-
-    # Ví dụ routing cơ bản — nhóm phát triển thêm:
-    policy_keywords = ["hoàn tiền", "refund", "flash sale", "license", "cấp quyền", "access", "level 3"]
-    risk_keywords = ["emergency", "khẩn cấp", "2am", "không rõ", "err-"]
+    risk_high = any(kw in task for kw in risk_keywords)
 
     if any(kw in task for kw in policy_keywords):
         route = "policy_tool_worker"
-        route_reason = f"task contains policy/access keyword"
+        matched = next(kw for kw in policy_keywords if kw in task)
+        route_reason = f"policy/access keyword detected: '{matched}'"
         needs_tool = True
-
-    if any(kw in task for kw in risk_keywords):
-        risk_high = True
-        route_reason += " | risk_high flagged"
-
-    # Human review override
-    if risk_high and "err-" in task:
+    elif any(kw in task for kw in retrieval_explicit):
+        route = "retrieval_worker"
+        matched = next(kw for kw in retrieval_explicit if kw in task)
+        route_reason = f"SLA/incident/HR keyword detected: '{matched}'"
+    elif error_code and not any(kw in task for kw in retrieval_explicit + policy_keywords):
         route = "human_review"
-        route_reason = "unknown error code + risk_high → human review"
+        route_reason = f"unknown error code '{error_code.group()}' with no recognized context"
+        risk_high = True
+
+    if risk_high:
+        risk_kw = next((kw for kw in risk_keywords if kw in task), None)
+        route_reason += f" | risk_high flagged: '{risk_kw}'" if risk_kw else " | risk_high flagged"
 
     state["supervisor_route"] = route
     state["route_reason"] = route_reason
