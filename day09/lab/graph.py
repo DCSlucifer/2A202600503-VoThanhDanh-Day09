@@ -197,8 +197,8 @@ from workers.synthesis import run as synthesis_run
 
 
 def retrieval_worker_node(state: AgentState) -> AgentState:
-    """Wrapper gọi retrieval worker. top_k=5 cho policy questions (multi-doc)."""
-    state["retrieval_top_k"] = 5 if state.get("needs_tool") else 3
+    """Wrapper gọi retrieval worker. top_k=7 cho tất cả queries để đảm bảo chunk quan trọng không bị bỏ sót."""
+    state["retrieval_top_k"] = 7
     return retrieval_run(state)
 
 
