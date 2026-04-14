@@ -96,8 +96,8 @@ retrieval_worker:
     - "Score phải là float trong khoảng [0, 1]"
     - "Stateless: không đọc hoặc ghi state ngoài những gì được khai báo ở trên"
   actual_implementation:
-    status: "TODO Sprint 2"  # Update to "done" khi xong
-    notes: ""
+    status: "done"
+    notes: "retrieve_dense() uses SentenceTransformer(all-MiniLM-L6-v2) + ChromaDB (77 chunks, paragraph-level). top_k=7 always (P1 SLA chunk ranks 7th in cosine similarity)."
 
 # ─────────────────────────────────────────────
 # Policy Tool Worker
@@ -166,8 +166,8 @@ policy_tool_worker:
     - "Phải ghi tên MCP tool đã gọi vào mcp_tools_used"
     - "Không được tự bịa policy rules không có trong tài liệu"
   actual_implementation:
-    status: "TODO Sprint 2"
-    notes: ""
+    status: "done"
+    notes: "Rule-based exception detection for flash_sale, digital_product, activated. MCP search_kb called when needs_tool=True. analyze_policy() returns exceptions_found list."
 
 # ─────────────────────────────────────────────
 # Synthesis Worker
@@ -214,8 +214,8 @@ synthesis_worker:
     - "confidence < 0.4 → khuyến khích set hitl_triggered=True"
     - "Không được dùng kiến thức ngoài context được cung cấp"
   actual_implementation:
-    status: "TODO Sprint 2"
-    notes: ""
+    status: "done"
+    notes: "OpenAI gpt-4o-mini synthesis with grounded system prompt. LLM-as-Judge confidence scoring (second gpt-4o-mini call), falls back to rule-based _estimate_confidence() on failure."
 
 # ─────────────────────────────────────────────
 # MCP Server
