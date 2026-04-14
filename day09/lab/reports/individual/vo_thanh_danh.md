@@ -105,7 +105,7 @@ Trace sau sửa: `run_20260414_153143.json` cho thấy 7 chunks được retriev
 
 ---
 
-## 4. Tôi tự đánh giá đóng góp của mình
+## 4.1 Tôi tự đánh giá đóng góp của mình
 
 **Tôi làm tốt nhất ở điểm nào?**
 
@@ -125,7 +125,7 @@ Tôi cần `mcp_server.py` từ Kiệt để `_call_mcp_tool()` trong `policy_to
 
 ---
 
-## 4.5. Đóng góp Bonus: Web UI Multi-Agent
+## 4.2. Đóng góp Bonus: Web UI Multi-Agent
 
 Khác với Day 08 chỉ là RAG tuyến tính, hệ Multi-Agent Day 09 rất khó để hiểu nếu chỉ xem log trên terminal. Do đó, tôi đã build một **Fullstack Web UI (Flask backend + JS/HTML/CSS Frontend)** tích hợp với API của Agent Graph để trực quan hóa kiến trúc này trước lớp.
 
