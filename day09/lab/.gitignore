@@ -3,4 +3,5 @@ CLAUDE.md
 superpowers/
 __pycache__/
 workers/__pycache__/
+.claude/
 chroma_db/
