@@ -1,6 +1,6 @@
 # Single Agent vs Multi-Agent Comparison — Lab Day 09
 
-**Nhóm:** 2A202600502-TruongHauMinhKiet-Day09  
+**Nhóm:** 2A202600502-Trương Hầu Minh Kiệt, 2A202600503-Võ Thành Danh 
 **Ngày:** 2026-04-14
 
 Nguồn số liệu:

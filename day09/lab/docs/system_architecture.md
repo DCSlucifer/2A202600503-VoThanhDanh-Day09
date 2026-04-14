@@ -1,6 +1,6 @@
 # System Architecture — Lab Day 09
 
-**Nhóm:** 2A202600502-TruongHauMinhKiet-Day09  
+**Nhóm:** 2A202600502-Trương Hầu Minh Kiệt, 2A202600503-Võ Thành Danh
 **Ngày:** 2026-04-14  
 **Version:** 1.1
 
@@ -8,7 +8,7 @@
 
 ## 1. Tổng quan kiến trúc
 
-Hệ thống của nhóm dùng pattern `Supervisor-Worker` với một shared state đi xuyên toàn pipeline. `Supervisor` trong [graph.py](<D:\AIThucChien\Day-09-Lab\2A202600502-TruongHauMinhKiet-Day09\day09\lab\graph.py>) chỉ làm nhiệm vụ phân loại câu hỏi, bật cờ `needs_tool`, `risk_high`, rồi route sang worker phù hợp. Phần domain knowledge được tách ra cho từng worker: `retrieval_worker` lấy evidence từ ChromaDB, `policy_tool_worker` xử lý ngoại lệ policy và gọi MCP tools, `synthesis_worker` tổng hợp câu trả lời grounded kèm confidence.
+Hệ thống của nhóm dùng pattern `Supervisor-Worker` với một shared state đi xuyên toàn pipeline. `Supervisor` trong graph.py chỉ làm nhiệm vụ phân loại câu hỏi, bật cờ `needs_tool`, `risk_high`, rồi route sang worker phù hợp. Phần domain knowledge được tách ra cho từng worker: `retrieval_worker` lấy evidence từ ChromaDB, `policy_tool_worker` xử lý ngoại lệ policy và gọi MCP tools, `synthesis_worker` tổng hợp câu trả lời grounded kèm confidence.
 
 Nhóm chọn pattern này thay vì single agent vì Day 08 là một pipeline monolithic: khi trả lời sai rất khó biết lỗi đến từ retrieval, policy check hay generation. Sang Day 09, trace ghi rõ `supervisor_route`, `route_reason`, `workers_called`, `mcp_tools_used`, nên việc debug tách được theo từng lớp.
 

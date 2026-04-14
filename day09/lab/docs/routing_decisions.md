@@ -1,6 +1,6 @@
 # Routing Decisions Log — Lab Day 09
 
-**Nhóm:** 2A202600502-TruongHauMinhKiet-Day09  
+**Nhóm:** 2A202600502-Trương Hầu Minh Kiệt, 2A202600503-Võ Thành Danh
 **Ngày:** 2026-04-14
 
 Các quyết định dưới đây được trích từ trace thật trong `artifacts/traces/`, không phải giả định.
